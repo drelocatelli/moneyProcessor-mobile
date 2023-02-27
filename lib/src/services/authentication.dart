@@ -24,6 +24,8 @@ class Authentication {
       );
 
       final data = IAuthentication.fromJson(jsonDecode(response.body));
+
+      debugPrint(data.message);
       
       tryResponse(
         response, 
@@ -55,7 +57,7 @@ class Authentication {
       final response = await http.post(
         Server.call('auth/register'),
         headers: {'Content-Type': 'application/json'},
-        body: register.toJSON()
+        body: jsonEncode(register.toJSON())
       );
 
       final data = jsonDecode(response.body);

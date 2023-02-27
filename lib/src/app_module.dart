@@ -7,8 +7,8 @@ class AppModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-    ModuleRoute('/', module: HomeModule()),
-    ModuleRoute('/dashboard', module: DashboardModule()),
+    ModuleRoute('/', module: HomeModule(), transition: TransitionType.fadeIn),
+    ModuleRoute('/dashboard', module: DashboardModule(), transition: TransitionType.fadeIn),
   ];
   
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../services/authentication.dart';
 import '_handleScreen.dart';
@@ -16,12 +17,18 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
+  final _formKey = GlobalKey<FormState>(debugLabel: 'login');
   final TextEditingController _login = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
   void _submit() {
     print('submit login');
-    Authentication.login(context, login: _login.text, password: _password.text);
+    final form = _formKey.currentState;
+
+    if(form != null && form.validate()) {
+      Authentication.login(context, login: _login.text, password: _password.text);
+      form.save();
+    }
   }
 
   @override
@@ -33,10 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
     
     return Form(
-      key: formKey,
+      key: _formKey,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,9 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _password,
                 obscureText: true,
                 onEditingComplete: () {
-                  if(formKey.currentState!.validate()) {
                    _submit();
-                  }
                 },
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -77,9 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if(formKey.currentState!.validate()) {
                       _submit();
-                    }
                   }, 
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
                   child: Text("Fazer login"),

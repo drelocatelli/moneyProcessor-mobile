@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:mp_mobile/src/controllers/FormController.dart';
 import 'package:mp_mobile/src/services/authentication.dart';
+import 'package:mp_mobile/src/services/dto/register.dart';
 
 import '_handleScreen.dart';
 
@@ -17,6 +19,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
 
+  final _formKey = GlobalKey<FormState>(debugLabel: 'register');
   final TextEditingController _name = TextEditingController();
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
@@ -25,7 +28,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submit() {
     debugPrint("submit register");
-    // Authentication.register();
+    final form = _formKey.currentState;
+
+    if(form!.validate()) {
+      debugPrint(_name.text);
+      Authentication.register(
+        IRegister(
+          name: _name.text, 
+          email: _email.text, 
+          password: _password.text,
+          password_confirmation: _repassword.text)
+      );
+    }
   }
 
   @override
@@ -39,9 +53,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
 
     return Form(
+      key: _formKey,
       child: Center(child: 
       SingleChildScrollView(
         child: Column(
@@ -52,7 +66,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: TextFormField(
-                  keyboardType: TextInputType.emailAddress,
+                  controller: _name,
+                  validator: (value) => FormController.validate(value: value.toString(), errorMsg: "O campo nome é obrigatório"),
                   decoration: const InputDecoration(
                     labelText: 'Nome',
                     border: OutlineInputBorder(),
@@ -61,6 +76,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               TextFormField(
+                controller: _email,
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) => FormController.validateEmail(value: value.toString(), errorMsg: "Informe um e-mail válido"),
                 decoration: const InputDecoration(
                   hintText: "Digite seu email",
                   labelText: "E-mail",
@@ -70,6 +88,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: TextFormField(
+                  controller: _password,
+                  obscureText: true,
+                  validator: (value) => FormController.size(value: value.toString(), min: 5, max: 15, errorMsg: "A senha deve conter entre 5 e 15 caracteres"),
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: "Senha",
@@ -80,15 +101,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: TextFormField(
+                  controller: _repassword,
+                  obscureText: true,
+                  validator: (value) => FormController.validate(value: value.toString(), errorMsg: "O campo não pode ser nulo"),
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: "Repita a senha",
                     hintText: "**********",
                   ),
                   onEditingComplete: () {
-                    if(formKey.currentState!.validate()) {
-                   _submit();
-                  }
+                    _submit();
                   },
                 ),
               ),
@@ -102,7 +124,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Text("Já possui conta?", style: TextStyle(color: Colors.blue)),
                   ),
                   ElevatedButton(
-                    onPressed: () => _submit(), 
+                    onPressed: () {
+                      _submit();
+                    }, 
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
                     child: Text("Fazer cadastro"),
                   ),
