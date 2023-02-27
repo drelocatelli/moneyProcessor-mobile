@@ -52,7 +52,7 @@ class Authentication {
   
   }
 
-  static Future<IAuthentication?> register(IRegister register) async {
+  static Future<IAuthentication?> register(BuildContext ctx, {required IRegister register}) async {
     try {
       final response = await http.post(
         Server.call('auth/register'),
@@ -60,9 +60,25 @@ class Authentication {
         body: jsonEncode(register.toJSON())
       );
 
-      final data = jsonDecode(response.body);
+      final data = IAuthentication.fromJson(jsonDecode(response.body));
 
-      return IAuthentication.fromJson(data);
+      tryResponse(response, 
+        onSuccess: () {
+          Notify.snackbar(ctx , snackbar: SnackBar(
+            content: Text("Conta criada com sucesso")
+          ));
+        }, 
+        onError: () {
+          Notify.snackbar(
+            ctx, 
+            snackbar: SnackBar(
+              content: Text("${data.message}")
+            )
+          );
+        }
+      );
+
+      return data;
 
     } catch(err) {
       debugPrint("err: $err");

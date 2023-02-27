@@ -25,14 +25,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _password = TextEditingController();
   final TextEditingController _repassword = TextEditingController();
 
-
   void _submit() {
     debugPrint("submit register");
     final form = _formKey.currentState;
 
     if(form!.validate()) {
-      debugPrint(_name.text);
       Authentication.register(
+        context,
+        register: 
         IRegister(
           name: _name.text, 
           email: _email.text, 
