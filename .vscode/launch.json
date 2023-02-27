@@ -1,0 +1,54 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--no-sound-null-safety",
+            ]
+        },
+                {
+            "name": "Web HTML",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--no-sound-null-safety",
+                "--web-port", "80",
+                "--web-renderer", "html",
+                "-d", "chrome"
+            ]
+        },
+        {
+            "name": "Web Canvas",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--no-sound-null-safety",
+                "--web-port", "80"
+            ]
+        },
+        {
+            "name": "Desktop",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "windows",
+            "args": [
+                "--no-sound-null-safety",
+            ]
+        },
+        {
+            "name": "Mobile",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "192.168.15.3:5555",
+            "args": [
+                "--no-sound-null-safety",
+            ]
+        }
+    ]
+}
