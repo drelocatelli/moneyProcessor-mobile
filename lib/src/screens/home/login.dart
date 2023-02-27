@@ -19,17 +19,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _login = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-  void submit() {
+  void _submit() {
     print('submit login');
-    Authentication.login(login: _login.text, password: _password.text);
+    Authentication.login(context, login: _login.text, password: _password.text);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _login.dispose();
+    _password.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
     
     return Form(
-      key: _formKey,
+      key: formKey,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -49,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: _password,
                 obscureText: true,
                 onEditingComplete: () {
-                  if(_formKey.currentState!.validate()) {
-                   submit();
+                  if(formKey.currentState!.validate()) {
+                   _submit();
                   }
                 },
                 decoration: const InputDecoration(
@@ -70,8 +77,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if(_formKey.currentState!.validate()) {
-                      submit();
+                    if(formKey.currentState!.validate()) {
+                      _submit();
                     }
                   }, 
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
