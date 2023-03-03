@@ -20,15 +20,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>(debugLabel: 'login');
   final TextEditingController _login = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  bool _saveLogin = true;
 
   void _submit() {
     print('submit login');
     final form = _formKey.currentState;
 
     if(form != null && form.validate()) {
-      Authentication.login(context, login: _login.text, password: _password.text);
+      Authentication.login(context, login: _login.text, password: _password.text, saveLogin: _saveLogin);
       form.save();
     }
+  }
+
+  void _toggleSaveLogin() {
+    _saveLogin = !_saveLogin;
+    setState(() {
+    });
   }
 
   @override
@@ -41,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     
-    return Form(
+    return  Form(
       key: _formKey,
       child: Center(
         child: Column(
@@ -74,10 +81,20 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: () {
-                   widget.isLoginScreen.toggle();
-                  },
-                  child: Text("Ainda não possui conta?", style: TextStyle(color: Colors.blue)),
+                  onTap: () => _toggleSaveLogin(),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          activeColor: Colors.black,
+                          onChanged: (bool? value) => _toggleSaveLogin(), 
+                          value: _saveLogin,
+                        ),
+                        Text("Manter conectado")
+                      ],
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -87,6 +104,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text("Fazer login"),
                 ),
               ],
+            ),
+            InkWell(
+              onTap: () {
+                widget.isLoginScreen.toggle();
+              },
+              child: Text("Ainda não possui conta?", style: TextStyle(color: Colors.blue)),
             ),
           ],
         ),

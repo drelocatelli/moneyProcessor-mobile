@@ -3,9 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mp_mobile/src/app_module.dart';
 import 'package:mp_mobile/src/app_widget.dart';
 
-void main() {
- 
-  
+void main() async {
   runApp(
     ModularApp(
       module: AppModule(),
