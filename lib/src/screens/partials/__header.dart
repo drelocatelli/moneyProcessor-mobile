@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mp_mobile/src/screens/partials/__calendar.dart';
 import 'package:mp_mobile/src/services/authentication.dart';
 import '../../../variables.dart';
 
@@ -58,7 +59,22 @@ class _HeaderState extends State<Header> {
 
   List<Widget> _dashboardActions() {
     return [
-      IconButton(onPressed: () => HandleAuthentication.destroyToken(), icon: Icon(Icons.logout))
+      Calendar(context).widget(),
+      IconButton(onPressed: () {
+        showDialog(
+          context: context, 
+          builder: (ctx) => AlertDialog(
+            title: Text("Deslogar"),
+            content: SelectableText("Realmente deseja sair agora?"),
+            actions: [
+              ElevatedButton(onPressed: () => HandleAuthentication.destroyToken(), style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 172, 65, 58))), child: Text("Sair")),
+              TextButton(onPressed: () => Modular.to.pop(), child: Text("Cancelar")),
+            ],
+          )
+        );
+
+      }, icon: Icon(Icons.logout))
+      
     ];
   }
   

@@ -21,7 +21,12 @@ class HandleAuthentication {
   static storeToken(String token) async {
     final db = await database();
     db.setString('token', token);
-    Modular.to.pushNamedAndRemoveUntil('/dashboard', (p0) => false);
+    Modular.to.pushNamedAndRemoveUntil('/dashboard/', (p0) => false);
+  }
+
+  static Future<String?> getToken() async {
+    final db = await database();
+    return db.getString('token');
   }
 
   static printToken() async {
@@ -35,7 +40,7 @@ class HandleAuthentication {
     printToken();
     
     if(db.getString('token') != null) {
-      return Modular.to.pushNamedAndRemoveUntil('/dashboard', (p0) => false);
+      return Modular.to.pushNamedAndRemoveUntil('/dashboard/', (p0) => false);
     }
   }
 
@@ -79,7 +84,7 @@ class Authentication {
           if(saveLogin) {
             HandleAuthentication.storeToken(data.token as String);
           }
-          Modular.to.pushNamedAndRemoveUntil('/dashboard', (p0) => false);
+          Modular.to.pushNamedAndRemoveUntil('/dashboard/', (p0) => false);
         }, 
         onError: () {
           Notify.snackbar(
@@ -112,7 +117,7 @@ class Authentication {
             content: Text("Conta criada com sucesso")
           ));
           HandleAuthentication.storeToken(data.token as String);
-          Modular.to.pushNamedAndRemoveUntil('/dashboard', (p0) => false);
+          Modular.to.pushNamedAndRemoveUntil('/dashboard/', (p0) => false);
         }, 
         onError: () {
           Notify.snackbar(

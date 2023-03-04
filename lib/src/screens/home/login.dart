@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       _submit();
                   }, 
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.black)),
-                  child: Text("Fazer login"),
+                  child: Text("Logar"),
                 ),
               ],
             ),
