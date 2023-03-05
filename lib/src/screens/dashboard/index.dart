@@ -57,7 +57,7 @@ class _DashboardPageState extends State<DashboardPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SelectableText('Bem vindo, ${user?.name}.'),
-              SizedBox(height: 40),
+              SizedBox(height: 100),
               Resume(),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mp_mobile/src/controllers/Date.dart';
+import 'package:mp_mobile/src/screens/dashboard/partials/revExpDetails.dart';
 import 'package:mp_mobile/src/services/dto/resume.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -69,15 +70,15 @@ class _ResumeState extends State<Resume> {
     
     return [
       SelectableText(
-        "Resumo de ${Date.formatDate(startDate!)} até ${Date.formatDate(endDate!)} \n(${Date.calcDateDiff(startDate, endDate)} dias)",
+        "Resumo de ${Date.formatDate(startDate)} até ${Date.formatDate(endDate)} \n(${Date.calcDateDiff(startDate, endDate)} dias)",
         style: TextStyle(fontSize: 15),
       ),
       SizedBox(height: 20),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SelectableText("Salário: R\$ ${resume?.salary}"),
-          TextButton(onPressed: () {setState(() {});}, child: Icon(Icons.refresh, color: Color.fromARGB(255, 218, 147, 67),))
+          SelectableText("Salário: R\$ ${resume?.salary}", style: TextStyle(fontSize: 23)),
+          TextButton(onPressed: () async {await Future.delayed(Duration(milliseconds: 400)); setState(() {});}, child: Icon(Icons.refresh, color: Color.fromARGB(255, 218, 147, 67),))
         ],
       ),
       SizedBox(height: 20),
@@ -86,21 +87,38 @@ class _ResumeState extends State<Resume> {
   }
 
   Widget _buildResumeTable(IResume? resume) {
-    _header(String text) {
+    _header({String? text, Widget? widget}) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         color: Color.fromARGB(255, 199, 133, 58), 
-        child: Text("${text}", 
+        child: (text != null) ? Text("${text}", 
         style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255))
-      ));
+      ) : widget
+      );
     }
     _tableHeaders() {
       return [
-        _header("#"),
-        _header("Receita"),
-        InkWell(child: _header("Despesa")),
-        _header("Saldo"),
-        _header("Status")
+        _header(text: "#"),
+        _header(
+          widget: Row(
+            children: [
+              SelectableText("Receita", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255))),
+              SizedBox(width: 5),
+              Tooltip(message: 'Detalhes', child: InkWell(onTap: () => RevExPDetails.getDetails(context, resume?.revenues), child: Icon(Icons.info_outlined, size: 13, color: Colors.blue[200]))),
+            ],
+          )
+        ),
+        _header(
+          widget: Row(
+            children: [
+              SelectableText("Despesa", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 255, 255, 255))),
+              SizedBox(width: 5),
+              Tooltip(message: 'Detalhes', child: InkWell(onTap: () => RevExPDetails.getDetails(context, resume?.expenses), child: Icon(Icons.info_outlined, size: 13, color: Colors.blue[200]))),
+            ],
+          )
+        ),
+        _header(text: "Saldo"),
+        _header(text: "Status")
       ];
     }
     
@@ -119,11 +137,13 @@ class _ResumeState extends State<Resume> {
               SelectableText("R\$ ${resume?.revenues?.total}", style: TextStyle(fontSize: 12)),
               SelectableText("R\$ ${resume?.expenses?.total}", style: TextStyle(fontSize: 12)),
               SelectableText("R\$ ${resume?.balance}", style: TextStyle(fontSize: 12)),
-              Icon(
-                (resume?.status == "positivo") ? Icons.done : Icons.close,
-                color: (resume?.status == "positivo") ? Colors.green : Colors.red,
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: Icon(
+                  (resume?.status == "positivo") ? Icons.done : Icons.close,
+                  color: (resume?.status == "positivo") ? Colors.green : Colors.red,
+                ),
               ),
-              // Text("${resume?.status}", style: TextStyle(fontSize: 12)),
             ],
           )
         ],
